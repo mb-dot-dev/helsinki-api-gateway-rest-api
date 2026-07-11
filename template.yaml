@@ -25,7 +25,6 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Description: JWT sub claim value of the single allowed client
     Default: /projects/helsinki/allowed-client-id
-    NoEcho: true
 
 Outputs:
   FunctionArn:
