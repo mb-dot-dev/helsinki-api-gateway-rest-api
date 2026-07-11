@@ -69,8 +69,8 @@ Resources:
           POWERTOOLS_LOG_LEVEL: INFO
           QUEUE_URL: !Ref QueueUrl
           ALLOWED_CLIENT_ID: !Ref AllowedClientId
-          ALLOWED_CLIENT_SECRET: '{{resolve:ssm:/projects/helsinki/AllowedClientSecret:1}}'
-          JWT_SIGNING_SECRET: '{{resolve:ssm:/projects/helsinki/JwtSigningSecret:1}}'
+          ALLOWED_CLIENT_SECRET: '{{resolve:ssm-secure:/projects/helsinki/AllowedClientSecret:1}}'
+          JWT_SIGNING_SECRET: '{{resolve:ssm-secure:/projects/helsinki/JwtSigningSecret:1}}'
       Tags:
         Project: !Ref ProjectName
         Name: !Ref FunctionName
