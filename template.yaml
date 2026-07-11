@@ -16,12 +16,16 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Description: URL of the existing SQS queue
     Default: /sqs/oslo/queue-url
-  AllowedIps:
-    Type: String
+  AllowedIp:
+    Type: AWS::SSM::Parameter::Value<String>
     Description: Comma-separated list of allowed IP addresses for the producer Lambda function
+    Default: /allowed-ips/dedicated-ip
+    NoEcho: true
   AllowedClientId:
-    Type: String
+    Type: AWS::SSM::Parameter::Value<String>
     Description: JWT sub claim value of the single allowed client
+    Default: /projects/helsinki/allowed-client-id
+    NoEcho: true
 
 Outputs:
   FunctionArn:
@@ -33,6 +37,21 @@ Outputs:
     Value: !Ref FunctionName
 
 Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      EndpointConfiguration: REGIONAL
+      Auth:
+        ResourcePolicy:
+          CustomStatements:
+            - Effect: Deny
+              Principal: "*"
+              Action: execute-api:Invoke
+              Resource: "arn:aws:execute-api:*:*:*/*/*/*"
+              Condition:
+                NotIpAddress:
+                  aws:SourceIp: !Ref AllowedIp
   Function:
     Type: AWS::Serverless::Function
     Properties:
@@ -48,11 +67,25 @@ Resources:
           POWERTOOLS_SERVICE_NAME: !Ref FunctionName
           POWERTOOLS_LOG_LEVEL: INFO
           QUEUE_URL: !Ref QueueUrl
-          ALLOWED_IPS: !Ref AllowedIps
           ALLOWED_CLIENT_ID: !Ref AllowedClientId
+          ALLOWED_CLIENT_SECRET: '{{resolve:ssm:/projects/helsinki/allowed-client-secret:1}}'
+          JWT_SIGNING_SECRET: '{{resolve:ssm:/projects/helsinki/JwtSigningSecret:1}}'
       Tags:
         Project: !Ref ProjectName
         Name: !Ref FunctionName
+      Events:
+        ApiEventRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /
+            Method: ANY
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /{proxy+}
+            Method: ANY
 
   LogGroup:
     Type: AWS::Logs::LogGroup

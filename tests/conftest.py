@@ -12,6 +12,8 @@ AUDIENCE = "api://default"
 ISSUER = "https://auth.molnarbence.dev/"
 QUEUE_NAME = "test-queue"
 QUEUE_URL = f"https://sqs.eu-west-1.amazonaws.com/123456789012/{QUEUE_NAME}"
+ALLOWED_CLIENT_ID = "test-client"
+ALLOWED_CLIENT_SECRET = "test-secret"
 
 
 @pytest.fixture(autouse=True)
@@ -21,6 +23,8 @@ def _lambda_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("AWS_DEFAULT_REGION", "eu-west-1")
     monkeypatch.setenv("AWS_ACCESS_KEY_ID", "testing")
     monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
+    monkeypatch.setenv("ALLOWED_CLIENT_ID", ALLOWED_CLIENT_ID)
+    monkeypatch.setenv("ALLOWED_CLIENT_SECRET", ALLOWED_CLIENT_SECRET)
 
 
 class LambdaContext:

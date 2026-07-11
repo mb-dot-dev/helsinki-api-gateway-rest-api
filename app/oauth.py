@@ -1,5 +1,4 @@
 import json
-import os
 import time
 import urllib.parse
 
@@ -8,10 +7,10 @@ from aws_lambda_powertools.event_handler.api_gateway import Response
 from aws_lambda_powertools.event_handler.router import APIGatewayRouter
 import jwt
 
+from app.jwt import get_jwt_config
+
 logger = Logger()
 router = APIGatewayRouter()
-
-_DEFAULT_ISSUER = "https://auth.molnarbence.dev/"
 
 
 @router.post("/oauth/token")
@@ -21,24 +20,32 @@ def issue_token() -> Response:
     body = event.body or ""
 
     content_type = headers.get("content-type", "")
-    client_id = _parse_client_id(body, content_type)
+    client_id, client_secret = _get_client_credentials(body, content_type)
+
+    jwt_config = get_jwt_config()
+
+    if client_id != jwt_config.allowed_client_id or client_secret != jwt_config.allowed_client_secret:
+        logger.warning("OAuth token request with invalid credentials", extra={"clientId": client_id})
+        return Response(
+            status_code=401,
+            content_type="application/json",
+            body=json.dumps({"message": "Invalid client credentials"}),
+        )
 
     logger.info("OAuth token request", extra={"contentType": content_type, "clientId": client_id})
 
     now = int(time.time())
     claims = {
-        "iss": _DEFAULT_ISSUER,
+        "iss": jwt_config.issuer,
         "sub": client_id,
         "azp": client_id,
-        "aud": "api://default",
+        "aud": jwt_config.audience,
         "iat": now,
         "exp": now + 3600,
         "scp": ["openid"],
     }
 
-    signing_secret = os.environ["JWT_SIGNING_SECRET"]
-
-    token = jwt.encode(claims, signing_secret, algorithm="HS256")
+    token = jwt.encode(claims, jwt_config.signing_secret, algorithm="HS256")
 
     return Response(
         status_code=200,
@@ -54,15 +61,17 @@ def issue_token() -> Response:
     )
 
 
-def _parse_client_id(body: str, content_type: str) -> str:
-    if not body:
-        return "mock-client"
+def _get_client_credentials(body: str, content_type: str) -> tuple[str, str]:
     if "application/json" in content_type:
         try:
             data = json.loads(body)
-            return data.get("client_id", "mock-client") if isinstance(data, dict) else "mock-client"
+            if isinstance(data, dict):
+                return data.get("client_id", ""), data.get("client_secret", "")
         except json.JSONDecodeError:
-            return "mock-client"
+            pass
+        return "", ""
+
     params = urllib.parse.parse_qs(body)
-    values = params.get("client_id", ["mock-client"])
-    return values[0]
+    client_id = params.get("client_id", [""])[0]
+    client_secret = params.get("client_secret", [""])[0]
+    return client_id, client_secret
