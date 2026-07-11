@@ -12,6 +12,7 @@ Parameters:
   LambdaExecutionRoleArn:
     Type: String
     Description: ARN of the existing IAM role for the producer Lambda execution
+  
   QueueUrl:
     Type: AWS::SSM::Parameter::Value<String>
     Description: URL of the existing SQS queue
