@@ -21,7 +21,6 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Description: Comma-separated list of allowed IP addresses for the producer Lambda function
     Default: /allowed-ips/dedicated-ip
-    NoEcho: true
   AllowedClientId:
     Type: AWS::SSM::Parameter::Value<String>
     Description: JWT sub claim value of the single allowed client
