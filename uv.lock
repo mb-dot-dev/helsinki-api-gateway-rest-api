@@ -306,6 +306,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "aws-lambda-powertools" },
+    { name = "pydantic" },
     { name = "pyjwt" },
 ]
 
@@ -324,6 +325,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "aws-lambda-powertools", specifier = ">=3.31.0" },
+    { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pyjwt", specifier = ">=2.0" },
 ]
 
