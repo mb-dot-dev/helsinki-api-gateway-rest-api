@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "aws-lambda-powertools>=3.31.0",
-    "mb-config>=0.2.0",
+    "mb-config[ssm]>=0.2.0",
     "pydantic>=2.13.4",
     "pyjwt>=2.0",
 ]

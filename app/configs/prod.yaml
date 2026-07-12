@@ -1,0 +1,4 @@
+ssm_params:
+  "string:/projects/helsinki/allowed-client-id": "auth:allowed_client_id"
+  "secure:/projects/helsinki/allowed-client-secret": "auth:allowed_client_secret"
+  "secure:/projects/helsinki/jwt-signing-secret": "jwt:signing_secret"

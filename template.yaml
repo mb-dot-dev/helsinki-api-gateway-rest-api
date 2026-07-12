@@ -13,26 +13,14 @@ Parameters:
     Type: String
     Description: ARN of the existing IAM role for the producer Lambda execution
   
-  QueueUrl:
-    Type: AWS::SSM::Parameter::Value<String>
-    Description: URL of the existing SQS queue
-    Default: /sqs/oslo/queue-url
   AllowedIps:
     Type: AWS::SSM::Parameter::Value<List<String>>
     Description: Comma-separated list of allowed IP addresses for the producer Lambda function
     Default: /allowed-ips/all
-  AllowedClientId:
+  QueueUrl:
     Type: AWS::SSM::Parameter::Value<String>
-    Description: JWT sub claim value of the single allowed client
-    Default: /projects/helsinki/allowed-client-id
-  AllowedClientSecret:
-    Type: AWS::SSM::Parameter::Value<String>
-    Description: JWT secret of the single allowed client
-    Default: /projects/helsinki/allowed-client-secret
-  JwtSigningSecret:
-    Type: AWS::SSM::Parameter::Value<String>
-    Description: JWT signing secret for the producer Lambda function
-    Default: /projects/helsinki/jwt-signing-secret
+    Description: URL of the existing SQS queue
+    Default: /sqs/oslo/queue-url
 
 Outputs:
   FunctionArn:
@@ -81,10 +69,7 @@ Resources:
         Variables:
           POWERTOOLS_SERVICE_NAME: !Ref FunctionName
           POWERTOOLS_LOG_LEVEL: INFO
-
-          AUTH__ALLOWED_CLIENT_ID: !Ref AllowedClientId
-          AUTH__ALLOWED_CLIENT_SECRET: !Ref AllowedClientSecret
-          JWT__SIGNING_SECRET: !Ref JwtSigningSecret
+          CONFIG_ENV: prod
           PRODUCER__QUEUE_URL: !Ref QueueUrl
       Tags:
         Project: !Ref ProjectName
