@@ -2,7 +2,11 @@ import time
 from typing import TYPE_CHECKING, Any
 
 import jwt
+from mb_config.config_manager import reset_config
 import pytest
+
+from app.main import init_config
+from app.producer import get_producer_config
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -19,12 +23,19 @@ ALLOWED_CLIENT_SECRET = "test-secret"
 @pytest.fixture(autouse=True)
 def _lambda_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("JWT_SIGNING_SECRET", JWT_SIGNING_SECRET)
-    monkeypatch.setenv("QUEUE_URL", QUEUE_URL)
+    monkeypatch.setenv("PRODUCER__QUEUE_URL", QUEUE_URL)
     monkeypatch.setenv("AWS_DEFAULT_REGION", "eu-west-1")
     monkeypatch.setenv("AWS_ACCESS_KEY_ID", "testing")
     monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
     monkeypatch.setenv("ALLOWED_CLIENT_ID", ALLOWED_CLIENT_ID)
     monkeypatch.setenv("ALLOWED_CLIENT_SECRET", ALLOWED_CLIENT_SECRET)
+
+
+@pytest.fixture(autouse=True)
+def _reset_config_cache() -> None:
+    reset_config()
+    init_config.cache_clear()
+    get_producer_config.cache_clear()
 
 
 class LambdaContext:
