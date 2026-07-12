@@ -17,10 +17,10 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Description: URL of the existing SQS queue
     Default: /sqs/oslo/queue-url
-  AllowedIp:
-    Type: AWS::SSM::Parameter::Value<String>
+  AllowedIps:
+    Type: AWS::SSM::Parameter::Value<List<String>>
     Description: Comma-separated list of allowed IP addresses for the producer Lambda function
-    Default: /allowed-ips/dedicated-ip
+    Default: /allowed-ips/all
   AllowedClientId:
     Type: AWS::SSM::Parameter::Value<String>
     Description: JWT sub claim value of the single allowed client
@@ -62,7 +62,7 @@ Resources:
               Resource: "arn:aws:execute-api:*:*:*/*/*/*"
               Condition:
                 NotIpAddress:
-                  aws:SourceIp: !Ref AllowedIp
+                  aws:SourceIp: !Ref AllowedIps
   Function:
     Type: AWS::Serverless::Function
     Properties:
