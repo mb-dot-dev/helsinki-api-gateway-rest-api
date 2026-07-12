@@ -326,7 +326,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "aws-lambda-powertools", specifier = ">=3.31.0" },
-    { name = "mb-config", specifier = ">=0.1.0" },
+    { name = "mb-config", specifier = ">=0.2.0" },
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pyjwt", specifier = ">=2.0" },
 ]
@@ -450,14 +450,14 @@ wheels = [
 
 [[package]]
 name = "mb-config"
-version = "0.1.0"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "yamlrocks" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ff/2e/ea129dcdcb7e958a75f45aa353cad753b6842f9d66c36aa424b1462c53ce/mb_config-0.1.0.tar.gz", hash = "sha256:0e2513c8a49ddb1a65bd8b1da1f43b77b1c54e94536a39119514d21a4e5ac3f4", size = 4096, upload-time = "2026-07-12T15:46:07.357Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/41/25/f3120b97ab87d425e443acf1d585ede54c46b5d25d1afb201f18f1063c9c/mb_config-0.2.0.tar.gz", hash = "sha256:f7845ffae908dc6668c850d5fa2a79f0bcc7e1b435088c74b61414b3b0a6995e", size = 4108, upload-time = "2026-07-12T20:00:00.526Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ac/23/38a7c3785c5b6e9c11ad72a39489f5901f6198402c998225269806cb07ec/mb_config-0.1.0-py3-none-any.whl", hash = "sha256:be402560bd02604f7e0bbcaf3143a95917152ff522213f2efc56bd1c7487d141", size = 5815, upload-time = "2026-07-12T15:46:06.546Z" },
+    { url = "https://files.pythonhosted.org/packages/74/a5/f08eb5f2c447553110726d3d186808cd9ba4077ff59c235f69134d61422e/mb_config-0.2.0-py3-none-any.whl", hash = "sha256:42664e47d960e15fe1d3ec45122b3e7ce68353ff02c917a05fca410a44699ee6", size = 5865, upload-time = "2026-07-12T19:59:59.503Z" },
 ]
 
 [[package]]

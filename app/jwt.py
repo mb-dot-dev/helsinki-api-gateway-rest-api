@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, ClassVar
 
 from aws_lambda_powertools.event_handler import Response
 import jwt
-from mb_config.config_manager import get_config
+from mb_config import get_config
 
 if TYPE_CHECKING:
     from aws_lambda_powertools.event_handler import ApiGatewayResolver
@@ -16,11 +16,9 @@ from pydantic import BaseModel
 class JwtConfig(BaseModel):
     section_name: ClassVar[str] = "jwt"
 
-    allowed_client_id: str
-    allowed_client_secret: str
     signing_secret: str
-    issuer: str = "https://auth.molnarbence.dev/"
-    audience: str = "api://default"
+    issuer: str
+    audience: str
 
 
 @cache

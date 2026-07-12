@@ -7,6 +7,7 @@ from aws_lambda_powertools.event_handler.api_gateway import Response
 from aws_lambda_powertools.event_handler.router import APIGatewayRouter
 import jwt
 
+from app.auth import authenticate_client
 from app.jwt import get_jwt_config
 
 logger = Logger()
@@ -22,9 +23,7 @@ def issue_token() -> Response:
     content_type = headers.get("content-type", "")
     client_id, client_secret = _get_client_credentials(body, content_type)
 
-    jwt_config = get_jwt_config()
-
-    if client_id != jwt_config.allowed_client_id or client_secret != jwt_config.allowed_client_secret:
+    if not authenticate_client(client_id, client_secret):
         logger.warning("OAuth token request with invalid credentials", extra={"clientId": client_id})
         return Response(
             status_code=401,
@@ -33,6 +32,8 @@ def issue_token() -> Response:
         )
 
     logger.info("OAuth token request", extra={"contentType": content_type, "clientId": client_id})
+
+    jwt_config = get_jwt_config()
 
     now = int(time.time())
     claims = {

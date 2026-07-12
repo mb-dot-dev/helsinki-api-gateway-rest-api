@@ -2,6 +2,10 @@ producer:
   queue_url: ""
 
 jwt:
+  signing_secret: ""
+  issuer: "https://auth.molnarbence.dev/"
+  audience: "api://default"
+
+auth:
   allowed_client_id: ""
   allowed_client_secret: ""
-  signing_secret: ""
