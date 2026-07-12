@@ -25,6 +25,14 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Description: JWT sub claim value of the single allowed client
     Default: /projects/helsinki/allowed-client-id
+  AllowedClientSecret:
+    Type: AWS::SSM::Parameter::Value<String>
+    Description: JWT secret of the single allowed client
+    Default: /projects/helsinki/allowed-client-secret
+  JwtSigningSecret:
+    Type: AWS::SSM::Parameter::Value<String>
+    Description: JWT signing secret for the producer Lambda function
+    Default: /projects/helsinki/jwt-signing-secret
 
 Outputs:
   FunctionArn:
@@ -67,8 +75,8 @@ Resources:
           POWERTOOLS_LOG_LEVEL: INFO
           QUEUE_URL: !Ref QueueUrl
           ALLOWED_CLIENT_ID: !Ref AllowedClientId
-          ALLOWED_CLIENT_SECRET: '{{resolve:ssm:/projects/helsinki/allowed-client-secret:1}}'
-          JWT_SIGNING_SECRET: '{{resolve:ssm:/projects/helsinki/jwt-signing-secret:1}}'
+          ALLOWED_CLIENT_SECRET: !Ref AllowedClientSecret
+          JWT_SIGNING_SECRET: !Ref JwtSigningSecret
       Tags:
         Project: !Ref ProjectName
         Name: !Ref FunctionName
