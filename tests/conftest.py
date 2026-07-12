@@ -5,6 +5,8 @@ import jwt
 from mb_config.config_manager import reset_config
 import pytest
 
+from app.auth import get_auth_config
+from app.jwt import get_jwt_config
 from app.main import init_config
 from app.producer import get_producer_config
 
@@ -36,6 +38,8 @@ def _reset_config_cache() -> None:
     reset_config()
     init_config.cache_clear()
     get_producer_config.cache_clear()
+    get_auth_config.cache_clear()
+    get_jwt_config.cache_clear()
 
 
 class LambdaContext:
