@@ -1,2 +1,7 @@
 producer:
   queue_url: ""
+
+jwt:
+  allowed_client_id: ""
+  allowed_client_secret: ""
+  signing_secret: ""

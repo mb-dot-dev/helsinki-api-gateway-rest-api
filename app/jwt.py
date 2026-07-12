@@ -1,9 +1,10 @@
+from functools import cache
 import json
-import os
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from aws_lambda_powertools.event_handler import Response
 import jwt
+from mb_config.config_manager import get_config
 
 if TYPE_CHECKING:
     from aws_lambda_powertools.event_handler import ApiGatewayResolver
@@ -13,6 +14,8 @@ from pydantic import BaseModel
 
 
 class JwtConfig(BaseModel):
+    section_name: ClassVar[str] = "jwt"
+
     allowed_client_id: str
     allowed_client_secret: str
     signing_secret: str
@@ -20,12 +23,11 @@ class JwtConfig(BaseModel):
     audience: str = "api://default"
 
 
+@cache
 def get_jwt_config() -> JwtConfig:
-    return JwtConfig(
-        allowed_client_id=os.environ["ALLOWED_CLIENT_ID"],
-        allowed_client_secret=os.environ["ALLOWED_CLIENT_SECRET"],
-        signing_secret=os.environ["JWT_SIGNING_SECRET"],
-    )
+    app_config = get_config()
+
+    return JwtConfig.model_validate(app_config[JwtConfig.section_name])
 
 
 def jwt_bearer(app: ApiGatewayResolver, next_middleware: NextMiddleware) -> Response:
