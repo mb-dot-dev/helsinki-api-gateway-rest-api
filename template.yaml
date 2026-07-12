@@ -60,13 +60,13 @@ Resources:
               Principal: "*"
               Action: execute-api:Invoke
               Resource: "arn:aws:execute-api:*:*:*/*/*/*"
-            - Effect: Deny
-              Principal: "*"
-              Action: execute-api:Invoke
-              Resource: "arn:aws:execute-api:*:*:*/*/*/*"
-              Condition:
-                NotIpAddress:
-                  aws:SourceIp: !Ref AllowedIps
+            # - Effect: Deny
+            #   Principal: "*"
+            #   Action: execute-api:Invoke
+            #   Resource: "arn:aws:execute-api:*:*:*/*/*/*"
+            #   Condition:
+            #     NotIpAddress:
+            #       aws:SourceIp: !Ref AllowedIps
   Function:
     Type: AWS::Serverless::Function
     Properties:
