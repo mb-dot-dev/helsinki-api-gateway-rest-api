@@ -43,6 +43,10 @@ Outputs:
     Description: Name of the producer Lambda function
     Value: !Ref FunctionName
 
+  ApiGatewayUrl:
+    Description: URL of the API Gateway endpoint
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/"
+
 Resources:
   ApiGateway:
     Type: AWS::Serverless::Api
