@@ -40,7 +40,8 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      EndpointConfiguration: REGIONAL
+      EndpointConfiguration:
+        Type: REGIONAL
       Auth:
         ResourcePolicy:
           CustomStatements:
